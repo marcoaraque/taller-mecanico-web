@@ -6,7 +6,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-async function registrarOrden(nombreCliente, nombreServicio, costoBase) {
+async function registrarOrden(nombreCliente, nombreServicio, costoBase, numeroTelefonico) {
     const impuesto = costoBase * 0.16; // El 16% que usó tu equipo en el C++
     const costoTotal = costoBase + impuesto;
 
@@ -16,7 +16,8 @@ async function registrarOrden(nombreCliente, nombreServicio, costoBase) {
             { 
                 CLIENTE: nombreCliente, 
                 SERVICIO: nombreServicio, 
-                SUBTOTAL: costoBase, 
+                SUBTOTAL: costoBase,
+                NUMERO TELEFONICO:numeroTelefonico 
                 IVA: impuesto, 
                 TOTAL: costoTotal 
             }

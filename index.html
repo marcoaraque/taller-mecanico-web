@@ -2,76 +2,106 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel de Control - Taller Mecánico</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión - TALLER MECÁNICO</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
-        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background: #24b47e; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #1f9d6d; }
+        /* Diseño y Formato */
+        :root { --primary: #2c3e50; --accent: #24b47e; --bg: #f8f9fa; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg); }
+        
+        /* Menú de Navegación */
+        nav { background: var(--primary); color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        nav a { color: white; text-decoration: none; margin: 0 10px; font-weight: bold; }
+
+        /* Hero e Imágenes */
+        .hero { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1486006396193-471cf6a5ff4a?auto=format&fit=crop&q=80&w=1000'); 
+                background-size: cover; height: 200px; display: flex; align-items: center; justify-content: center; color: white; text-align: center; }
+
+        .container { padding: 30px; max-width: 900px; margin: auto; }
+        
+        /* Interfaz de Registro */
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-top: 5px solid var(--accent); }
+        h2 { color: var(--primary); margin-top: 0; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #1f9d6d; transform: translateY(-2px); }
+
+        /* Botón de Chat (Requisito) */
+        .chat-btn { position: fixed; bottom: 20px; right: 20px; background: #007bff; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; font-size: 24px; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>Registro de Ordenes</h2>
-        <input type="text" id="cliente" placeholder="Nombre del Cliente">
-        <input type="text" id="servicio" placeholder="Descripción del Trabajo">
-        <input type="number" id="precio" placeholder="Precio Base">
-        <button onclick="enviarDatos()">Registrar en Sistema</button>
-        <p id="mensaje"></p>
+
+    <nav>
+        <div class="logo">🔧SISTEMA DE CONTROL DE SERVICIOS🔧</div>
+        <div class="menu">
+            <a href="#">Inicio</a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>🛠️ TALLER AUTOMOTRIZ 🛠️</h1>
     </div>
 
+    <div class="container">
+        <div class="card">
+            <h2>Registrar Nueva Orden</h2>
+            <input type="text" id="cliente" placeholder="Nombre completo del Cliente">
+            <input type="text" id="servicio" placeholder="Tipo de Servicio (ej. Afinación)">
+            <input type="number" id="precio" placeholder="Costo Base (MXN)">
+            <input type="number" id="telefono" placeholder="Numero de contacto">
+            <button onclick="enviarDatos()">Guardar en Base de Datos</button>
+            <p id="mensaje" style="text-align: center; font-weight: bold;"></p>
+        </div>
+    </div>
+
+    <div class="chat-btn" onclick="alert('CONTÁCTANOS!, llama al +52 8180914666 para más información')">💬</div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // TUS MISMAS LLAVES
+        const supabaseUrl = 'https://anazpunaauegeqtijxdt.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFuYXpwdW5hYXVlZ2VxdGlqeGR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MjE0MjgsImV4cCI6MjA5NDA5NzQyOH0.jMtjcir4eO556WDvlCmKgEdgYvniW7SMd5Dw_mrqZzU'; 
+        const _supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-<script>
-    // 1. Usa tus credenciales aquí
-    const supabaseUrl = 'https://anazpunaauegeqtijxdt.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFuYXpwdW5hYXVlZ2VxdGlqeGR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MjE0MjgsImV4cCI6MjA5NDA5NzQyOH0.jMtjcir4eO556WDvlCmKgEdgYvniW7SMd5Dw_mrqZzU';
+        async function enviarDatos() {
+            const cliente = document.getElementById('cliente').value;
+            const servicio = document.getElementById('servicio').value;
+            const precio = parseFloat(document.getElementById('precio').value);
+            const telefono = document.getElementById('telefono').value;
+            const msg = document.getElementById('mensaje');
 
-    // 2. IMPORTANTE: Así se inicializa para la web
-    const _supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            if (!cliente || !servicio || isNaN(precio)) {
+                alert("Por favor completa los datos");
+                return;
+            }
 
-    // 3. La función debe estar bien escrita
-    async function enviarDatos() {
-        console.log("Intentando enviar datos..."); // Esto saldrá en la consola (F12)
-        
-        const cliente = document.getElementById('cliente').value;
-        const servicio = document.getElementById('servicio').value;
-        const precio = parseFloat(document.getElementById('precio').value);
-        const msg = document.getElementById('mensaje');
+            const iva = precio * 0.16;
+            const total = precio + iva;
 
-        if (!cliente || !servicio || isNaN(precio)) {
-            alert("Por favor llena todos los campos");
-            return;
+            const { error } = await _supabase
+    .from('ORDENES')
+    .insert([
+        { 
+            "CLIENTE": cliente, // Ponlo entre comillas
+            "SERVICIO": servicio, 
+            "SUBTOTAL": precio, 
+            "IVA": iva, 
+            "TOTAL": total, 
+            "NUMERO TELEFONICO": telefono,
         }
-
-        const impuesto = precio * 0.16;
-        const costoTotal = precio + impuesto;
-
-        // Cambié 'ordenes' por 'ORDENES' porque vi en tu foto que está en MAYÚSCULAS
-        const { data, error } = await _supabase
-            .from('ORDENES') 
-            .insert([
-                { 
-                    CLIENTE: cliente, // En tu foto la columna también está en MAYÚSCULAS
-                    SERVICIO: servicio, 
-                    SUBTOTAL: precio, 
-                    IVA: impuesto, 
-                    TOTAL: costoTotal 
-                }
-            ]);
-
-        if (error) {
-            console.error(error);
-            msg.innerText = "Error: " + error.message;
-            msg.style.color = "red";
-        } else {
-            msg.innerText = "¡Orden del taller guardada con éxito!";
-            msg.style.color = "green";
-            // Limpiar campos
-            document.getElementById('cliente').value = "";
-            document.getElementById('servicio').value = "";
-            document.getElementById('precio').value = "";
+    ]);
+            if (error) {
+                msg.innerText = "Error: " + error.message;
+                msg.style.color = "red";
+            } else {
+                msg.innerText = "✅ ¡Orden registrada en el taller!";
+                msg.style.color = "green";
+                document.getElementById('cliente').value = "";
+                document.getElementById('servicio').value = "";
+                document.getElementById('precio').value = "";
+            }
         }
-    }
-</script>
+    </script>
+</body>
+</html>
